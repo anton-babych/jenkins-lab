@@ -13,11 +13,13 @@ pipeline {
     }
     stage ('Test') {
       steps {
-        sh 'npm test -- --coverage'
-      }
-      post {
-        junit checksName: 'Jest Tests', testResults: 'junit.xml'
+        sh 'npm test -- --coverage --testResultsProcessor="jest-junit"'
       }
     }
+  }
+  post {
+      always {
+        junit checksName: 'Jest Tests', testResults: 'junit.xml'
+      }
   }
 }
