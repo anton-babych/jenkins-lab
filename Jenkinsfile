@@ -1,7 +1,10 @@
 pipeline {
   agent {
-    // Use the Dockerfile in the root of the repository
-    dockerfile true
+    // Use the node label and the image name
+    docker {
+      image 'node:18'
+      label 'common-build-machine'
+    }
   }
   stages {
     stage ('Build') {
