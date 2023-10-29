@@ -1,0 +1,1 @@
+export const INVALID_STRING_VALUE_ERROR: string = 'invalid string value length';
