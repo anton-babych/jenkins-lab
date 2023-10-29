@@ -1,30 +1,26 @@
 pipeline {
-  agent {
-    // Use a node image with alpine
-    docker {
-      image 'node:18-alpine'
-      args '-u root:root' // You may need root privileges to install chromium
+    options { timestamps() }
+    agent none
+    stages {
+        stage('Check scm') {
+            agent any
+            steps{
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building.. ${BUILD_NUMBER}"
+                echo "completed"
+            }
+        }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    args '-u root:root'
+                }
+            }
+        }
     }
-  }
-  stages {
-    stage ('Install') {
-      steps {
-        // Install dependencies
-        sh 'apk add chromium' // Install chromium for testing
-        sh 'npm install' // Install npm packages
-      }
-    }
-    stage ('Build') {
-      steps {
-        // Build the app
-        sh 'npm run build'
-      }
-    }
-    stage ('Test') {
-      steps {
-        // Test the app with jest
-        sh 'CHROME_BIN=/usr/bin/chromium-browser npm test' // Set the CHROME_BIN environment variable
-      }
-    }
-  }
 }
