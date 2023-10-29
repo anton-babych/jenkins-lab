@@ -1,25 +1,22 @@
 pipeline {
-    options { timestamps() }
-    agent none
-    stages {
-        stage('Check scm') {
-            agent any
-            steps{
-                checkout scm
-            }
-        }
-        stage('Build') {
-            steps {
-                echo "Building.. ${BUILD_NUMBER}"
-                echo "completed"
-            }
-        }
-        stage('Test') {
-            agent {
-                docker {
-                    image
-                }
-            }
-        }
+  agent {
+    dockerfile true
+  }
+  stages {
+    stage ('Install') {
+      steps {
+        sh 'npm install'
+      }
     }
+    stage ('Build') {
+      steps {
+        sh 'npm run build'
+      }
+    }
+    stage ('Test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+  }
 }
