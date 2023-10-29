@@ -15,6 +15,9 @@ pipeline {
       steps {
         sh 'npm test -- --coverage'
       }
+      post {
+        junit checksName: 'Jest Tests', testResults: 'junit.xml'
+      }
     }
   }
 }
