@@ -20,6 +20,9 @@ pipeline {
                     image 'node:18-alpine'
                     args '-u root:root'
                 }
+                steps {
+                    sh 'npm run test'
+                }
             }
         }
     }
