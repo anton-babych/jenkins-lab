@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="8" failures="0" errors="0" time="1.137">
+  <testsuite name="notepad" errors="0" failures="0" skipped="0" timestamp="2023-10-29T22:54:08" time="1.03" tests="8">
+    <testcase classname="notepad push should add a valid value to the top" name="notepad push should add a valid value to the top" time="0.003">
+    </testcase>
+    <testcase classname="notepad push shouldn&apos;t add a invalid value" name="notepad push shouldn&apos;t add a invalid value" time="0.019">
+    </testcase>
+    <testcase classname="notepad push should not add undefined value" name="notepad push should not add undefined value" time="0.001">
+    </testcase>
+    <testcase classname="notepad push should throw error to invalid string" name="notepad push should throw error to invalid string" time="0.013">
+    </testcase>
+    <testcase classname="notepad pop should remove and return the value from the top" name="notepad pop should remove and return the value from the top" time="0.001">
+    </testcase>
+    <testcase classname="notepad pop should return null if is empty" name="notepad pop should return null if is empty" time="0">
+    </testcase>
+    <testcase classname="notepad peek should return the value from the top without removing it" name="notepad peek should return the value from the top without removing it" time="0.001">
+    </testcase>
+    <testcase classname="notepad peek if is empty" name="notepad peek if is empty" time="0">
+    </testcase>
+  </testsuite>
+</testsuites>
