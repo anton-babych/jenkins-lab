@@ -2,7 +2,8 @@
   "scripts": {
     "test": "jest",
     "build": "npx webpack --config webpack.config.js",
-    "start": ""
+    "prestart": "npm run build",
+    "start": "node server.js"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
