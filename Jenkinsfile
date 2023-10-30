@@ -1,6 +1,5 @@
 pipeline {
   agent {
-    label 'docker-agent'
     docker {
       image 'node:18'
       args '-u=\"root\"'
@@ -9,7 +8,7 @@ pipeline {
    environment {
       IMAGE_NAME = 'jenkins-lab:0.1'
       REPO_NAME = 'jenkins-lab'
-      DOCKERHUB_CREDENTIALS = 'antonbabych-dockerhub'
+      DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
    }
 
   stages {
@@ -17,6 +16,7 @@ pipeline {
       steps {
         sh 'npm install'
         sh 'npm run build'
+        sh 'docker build -t antonbabych/jenkins-lab:latest'
       }
     }
     stage ('Test') {
