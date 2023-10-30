@@ -34,7 +34,7 @@ pipeline {
      stage ('Push') {
          agent {
              docker {
-                 image 'node:18'
+                 image 'alpine'
                  args '-u=\"root\"'
              }
          }
