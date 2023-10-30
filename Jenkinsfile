@@ -33,7 +33,7 @@ pipeline {
     }
      stage ('Push') {
          steps {
-            sh 'docker build -t $DOCKER_USER/$IMAGE_NAME .'
+            sh 'docker build -t $IMAGE_NAME .'
             sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
             sh 'docker tag $IMAGE_NAME $DOCKER_USER/$REPO_NAME'
             sh 'docker push $DOCKER_USER/$REPO_NAME'
