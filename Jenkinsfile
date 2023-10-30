@@ -6,11 +6,7 @@ pipeline {
   }
    environment {
       IMAGE_NAME = 'jenkins-lab:0.1'
-      REPO_NAME = 'jenkins'
-
-      registry = "antonbabych/jenkins-lab"
-      registryCredential = 'antonbabych'
-      dockerImage = ''
+      REPO_NAME = 'jenkins-lab'
    }
 
   stages {
@@ -27,11 +23,9 @@ pipeline {
     }
     stage ('Push') {
         steps {
-            script {
-                dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                docker.withRegistry( '', registryCredential ) {
-                dockerImage.push()
-            }
+            sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+            sh 'docker tag $IMAGE_NAME $DOCKER_USER/$REPO_NAME'
+            sh 'docker push $DOCKER_USER/$REPO_NAME'
         }
     }
   }
@@ -40,5 +34,4 @@ pipeline {
         junit checksName: 'Jest Tests', testResults: 'junit.xml'
       }
   }
-}
 }
