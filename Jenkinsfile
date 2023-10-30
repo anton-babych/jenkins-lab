@@ -32,12 +32,6 @@ pipeline {
         }
     }
      stage ('Push') {
-         agent {
-             docker {
-                 image 'alpine'
-                 args '-u=\"root\"'
-             }
-         }
          steps {
             sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
             sh 'docker tag $IMAGE_NAME $DOCKER_USER/$REPO_NAME'
