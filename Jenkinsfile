@@ -8,7 +8,7 @@ pipeline {
    environment {
       IMAGE_NAME = 'jenkins-lab:0.1'
       REPO_NAME = 'jenkins-lab'
-      DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
+      //DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
    }
 
   stages {
@@ -16,7 +16,6 @@ pipeline {
       steps {
         sh 'npm install'
         sh 'npm run build'
-        sh 'docker build -t antonbabych/jenkins-lab:latest'
       }
     }
     stage ('Test') {
@@ -24,16 +23,13 @@ pipeline {
         sh 'npm test -- --coverage --testResultsProcessor="jest-junit"'
       }
     }
-    stage ('Login') {
+     stage ('Push') {
         steps {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+           sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+           sh 'docker tag $IMAGE_NAME $DOCKER_USER/$REPO_NAME'
+           sh 'docker push $DOCKER_USER/$REPO_NAME'
         }
-    }
-    stage ('Push') {
-        steps {
-            sh 'docker push antonbabych/jenkins-lab:latest'
-        }
-    }
+     }
   }
   post {
       always {
