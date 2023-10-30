@@ -1,15 +1,11 @@
 pipeline {
   agent none
-    docker {
-      image 'node:18'
-      args '-u=\"root\"'
-    }
 
-   environment {
+  environment {
       IMAGE_NAME = 'jenkins-lab:0.1'
       REPO_NAME = 'jenkins-lab'
       //DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
-   }
+  }
 
   stages {
     stage ('Build') {
