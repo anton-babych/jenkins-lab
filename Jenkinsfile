@@ -1,10 +1,10 @@
 pipeline {
-  agent {
+  agent none
     docker {
       image 'node:18'
       args '-u=\"root\"'
     }
-  }
+
    environment {
       IMAGE_NAME = 'jenkins-lab:0.1'
       REPO_NAME = 'jenkins-lab'
@@ -13,15 +13,27 @@ pipeline {
 
   stages {
     stage ('Build') {
+      agent {
+        docker {
+            image 'node:18'
+            args '-u=\"root\"'
+        }
+      }
       steps {
         sh 'npm install'
         sh 'npm run build'
       }
     }
     stage ('Test') {
-      steps {
-        sh 'npm test -- --coverage --testResultsProcessor="jest-junit"'
-      }
+        agent {
+            docker {
+                image 'node:18'
+                args '-u=\"root\"'
+            }
+        }
+        steps {
+            sh 'npm test -- --coverage --testResultsProcessor="jest-junit"'
+        }
     }
      stage ('Push') {
         steps {
