@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-      IMAGE_NAME = 'jenkins-lab:0.1'
-      REPO_NAME = 'jenkins-lab'
+      IMAGE_NAME = 'jenkins-lab'
+      REPO_NAME = 'jenkins-lab:0.1'
       //DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
   }
 
@@ -31,7 +31,7 @@ pipeline {
             sh 'npm test -- --coverage --testResultsProcessor="jest-junit"'
         }
     }
-     stage ('Push') {
+     stage ('Dockerhub push') {
          steps {
             sh 'docker build -t $IMAGE_NAME .'
             sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
