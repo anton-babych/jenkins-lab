@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest",
+    "test": "npx jest",
     "build": "npx webpack --config webpack.config.js",
     "prestart": "npm run build",
     "start": "node server.js"
