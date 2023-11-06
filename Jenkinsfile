@@ -3,7 +3,7 @@ pipeline {
 
   environment {
       IMAGE_NAME = 'jenkins-lab'
-      REPO_NAME = 'jenkins-lab:0.1'
+      REPO_NAME = 'jenkins-lab:0.2'
       DOCKERHUB_CREDENTIALS = credentials('antonbabych-dockerhub')
   }
 
