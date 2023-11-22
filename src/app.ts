@@ -1,5 +1,7 @@
 import {Stack} from "./Stack";
 
+console.log('code launched');
+
 const notePad = new Stack<string>();
 
 notePad.push('check1');
