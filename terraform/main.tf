@@ -9,15 +9,15 @@ terraform {
 
 # Configure the AWS provider
 provider "aws" {
-  region     = "eu-north-1"
+  region     = "eu-central-1"
 }
 
 variable "REPOSITORY_URI" {
   type = string
 }
 
-resource "aws_lightsail_container_service" "terraform_app" {
-  name = "terraform_app"
+resource "aws_lightsail_container_service" "flask_application" {
+  name = "flask-app"
   power = "nano"
   scale = 1
 
@@ -33,12 +33,12 @@ resource "aws_lightsail_container_service" "terraform_app" {
   }
 }
 
-resource "aws_lightsail_container_service_deployment_version" "terraform_app_deployment" {
+resource "aws_lightsail_container_service_deployment_version" "flask_app_deployment" {
   container {
-    container_name = "terraform-app"
+    container_name = "flask-application"
 
     image = "${var.REPOSITORY_URI}:latest"
-    
+
     ports = {
       # Consistent with the port exposed by the Dockerfile and app.py
       8080 = "HTTP"
@@ -46,7 +46,7 @@ resource "aws_lightsail_container_service_deployment_version" "terraform_app_dep
   }
 
   public_endpoint {
-    container_name = "terraform-app"
+    container_name = "flask-application"
     # Consistent with the port exposed by the Dockerfile and app.py
     container_port = 8080
 
@@ -60,5 +60,5 @@ resource "aws_lightsail_container_service_deployment_version" "terraform_app_dep
     }
   }
 
-  service_name = aws_lightsail_container_service.terraform_app.name
+  service_name = aws_lightsail_container_service.flask_application.name
 }
