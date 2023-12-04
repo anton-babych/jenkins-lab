@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+provider "aws" {
+  region = var.REGION
+}
+
 variable "REGION" {
   type = string
 }
@@ -15,9 +19,6 @@ variable "REPOSITORY_URI" {
   type = string
 }
 
-provider "aws" {
-  region = var.REGION
-}
 
 
 resource "aws_lightsail_container_service" "nodejs_application" {
