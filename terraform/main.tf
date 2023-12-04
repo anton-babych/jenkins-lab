@@ -20,6 +20,7 @@ resource "aws_lightsail_container_service" "nodejs_application" {
   name = "nodejs-app"
   power = "nano"
   scale = 1
+  service-name = "nodejs-app"
 
   private_registry_access {
     ecr_image_puller_role {
