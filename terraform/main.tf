@@ -37,7 +37,7 @@ resource "aws_lightsail_container_service" "nodejs_application" {
   }
 }
 
-resource "aws_lightsail_container_service_deployment_version" "nodejs_app_deployment" {
+resource "aws_lightsail_container_service_deployment_version" "deployment" {
   container {
     container_name = "nodejs-application"
 
