@@ -13,14 +13,11 @@ provider "aws" {
 
 variable "REGION" {
   type = string
-
 }
 
 variable "REPOSITORY_URI" {
   type = string
 }
-
-
 
 resource "aws_lightsail_container_service" "nodejs_application" {
   name = "nodejs-app"
