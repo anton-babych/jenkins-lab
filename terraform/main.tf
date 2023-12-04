@@ -13,7 +13,7 @@ provider "aws" {
 
 variable "REGION" {
   type = string
-  default = "eu-north-1"
+
 }
 
 variable "REPOSITORY_URI" {
