@@ -16,8 +16,8 @@ variable "REPOSITORY_URI" {
   type = string
 }
 
-resource "aws_lightsail_container_service" "web_application" {
-  name = "flask-app"
+resource "aws_lightsail_container_service" "terraform_app" {
+  name = "terraform_app"
   power = "nano"
   scale = 1
 
@@ -33,9 +33,9 @@ resource "aws_lightsail_container_service" "web_application" {
   }
 }
 
-resource "aws_lightsail_container_service_deployment_version" "web_app_deployment" {
+resource "aws_lightsail_container_service_deployment_version" "terraform_app_deployment" {
   container {
-    container_name = "flask-application"
+    container_name = "terraform_app"
 
     image = "${var.REPOSITORY_URI}:latest"
     
@@ -46,7 +46,7 @@ resource "aws_lightsail_container_service_deployment_version" "web_app_deploymen
   }
 
   public_endpoint {
-    container_name = "flask-application"
+    container_name = "terraform-app"
     # Consistent with the port exposed by the Dockerfile and app.py
     container_port = 8080
 
@@ -60,5 +60,5 @@ resource "aws_lightsail_container_service_deployment_version" "web_app_deploymen
     }
   }
 
-  service_name = aws_lightsail_container_service.web_application.name
+  service_name = aws_lightsail_container_service.terraform_app.name
 }
