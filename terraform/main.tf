@@ -16,8 +16,8 @@ variable "REPOSITORY_URI" {
   type = string
 }
 
-resource "aws_lightsail_container_service" "flask_application" {
-  name = "flask-app"
+resource "aws_lightsail_container_service" "nodejs_application" {
+  name = "nodejs-app"
   power = "nano"
   scale = 1
 
@@ -27,15 +27,14 @@ resource "aws_lightsail_container_service" "flask_application" {
     }
   }
 
-
   tags = {
     version = "1.0.0"
   }
 }
 
-resource "aws_lightsail_container_service_deployment_version" "flask_app_deployment" {
+resource "aws_lightsail_container_service_deployment_version" "nodejs_app_deployment" {
   container {
-    container_name = "flask-application"
+    container_name = "nodejs-application"
 
     image = "${var.REPOSITORY_URI}:latest"
 
@@ -46,7 +45,7 @@ resource "aws_lightsail_container_service_deployment_version" "flask_app_deploym
   }
 
   public_endpoint {
-    container_name = "flask-application"
+    container_name = "nodejs-application"
     # Consistent with the port exposed by the Dockerfile and app.py
     container_port = 8080
 
@@ -60,5 +59,5 @@ resource "aws_lightsail_container_service_deployment_version" "flask_app_deploym
     }
   }
 
-  service_name = aws_lightsail_container_service.flask_application.name
+  service_name = aws_lightsail_container_service.nodejs_application.name
 }
