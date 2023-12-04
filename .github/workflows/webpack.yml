@@ -48,8 +48,9 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.REPOSITORY_NAME }}
         IMAGE_TAG: latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $IMAGE_TAG
+        docker build -t testing .
+        docker tag testing $ECR_REGISTRY/$ECR_REPOSITORY
+        docker push ${{ secrets.REPOSITORY_NAME }}
 
     - name: Setup Terraform
       env:
