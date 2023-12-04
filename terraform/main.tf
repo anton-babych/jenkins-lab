@@ -44,14 +44,14 @@ resource "aws_lightsail_container_service_deployment_version" "nodejs_app_deploy
 
     ports = {
       # Consistent with the port exposed by the Dockerfile and app.py
-      8080 = "HTTP"
+      5000 = "HTTP"
     }
   }
 
   public_endpoint {
     container_name = "nodejs-application"
     # Consistent with the port exposed by the Dockerfile and app.py
-    container_port = 8080
+    container_port = 5000
 
     health_check {
       healthy_threshold   = 2
