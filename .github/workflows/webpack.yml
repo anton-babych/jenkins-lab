@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
       run: |
         docker build -t testing .
         docker tag testing $ECR_REGISTRY/$ECR_REPOSITORY
-        docker push ${{ secrets.REPOSITORY_NAME }}
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Setup Terraform
       env:
