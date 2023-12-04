@@ -9,7 +9,7 @@ terraform {
 
 # Configure the AWS provider
 provider "aws" {
-  region     = "eu-central-1"
+  region     = "eu-north-1"
 }
 
 variable "REPOSITORY_URI" {
@@ -35,7 +35,7 @@ resource "aws_lightsail_container_service" "terraform_app" {
 
 resource "aws_lightsail_container_service_deployment_version" "terraform_app_deployment" {
   container {
-    container_name = "terraform_app"
+    container_name = "terraform-app"
 
     image = "${var.REPOSITORY_URI}:latest"
     
