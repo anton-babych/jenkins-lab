@@ -45,7 +45,7 @@ jobs:
     - name: Check ECR Repository Existence
       id: check-ecr
       run: |
-        REPOSITORY_NAME="<YOUR_REPOSITORY_NAME>"
+        REPOSITORY_NAME="${{ secrets.REPOSITORY_NAME }}"
         aws ecr describe-repositories --repository-names $REPOSITORY_NAME
         echo "ECR Repository $REPOSITORY_NAME exists"
 
