@@ -65,7 +65,7 @@ jobs:
       run: |
         docker build -t testing .
         docker tag testing $ECR_REGISTRY/$ECR_REPOSITORY
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Setup Terraform
       env:
