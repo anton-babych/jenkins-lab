@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "part2" ]
 
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,11 +37,12 @@ jobs:
         npx jest
 
     - name: Setup AWS ECR Details
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v3
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: arn:aws:iam::934170639195:role/github.to.aws
         aws-region: ${{ secrets.AWS_REGION }}
+#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Login to Amazon ECR
       id: login-ecr
