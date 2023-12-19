@@ -107,4 +107,4 @@ jobs:
         terraform apply -input=false -auto-approve -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
       working-directory: terraform
 
-#fafqg
+#fag
