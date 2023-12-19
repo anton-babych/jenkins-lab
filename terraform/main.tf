@@ -26,7 +26,7 @@ variable "REGION" {
 
 variable "bucket_name" {
   description = "Name of the S3 bucket"
-  default     = "my-s3-bucket"
+  default     = "my-s3-bucket-random-231412413"
 }
 
 variable "REPOSITORY_URI" {
