@@ -39,7 +39,6 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: arn:aws:iam::934170639195:role/github.to.aws
-          role-duration-seconds: 5000
           role-session-name: GitHubActions
           role-skip-session-tagging: true
           mask-aws-account-id: false
