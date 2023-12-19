@@ -6,29 +6,65 @@ terraform {
     }
   }
 }
+
 provider "aws" {
   region = var.REGION
-}
-
-resource "aws_s3_bucket" "bucket" {
-  bucket = var.bucket_name
-  acl    = "private"
-
-  versioning {
-    enabled = true
+  assume_role {
+    role_arn = "arn:aws:iam::934170639195:role/github.to.aws"
+    session_name = "github_action_session"
   }
 }
 
 variable "REGION" {
-  description = "AWS region"
-  default     = "eu-north-1"
-}
-
-variable "bucket_name" {
-  description = "Name of the S3 bucket"
-  default     = "my-s3-bucket-random-231412413"
+  type = string
 }
 
 variable "REPOSITORY_URI" {
   type = string
+}
+
+resource "aws_lightsail_container_service" "nodejs_application" {
+  name = "nodejs2-app"
+  power = "nano"
+  scale = 1
+
+  private_registry_access {
+    ecr_image_puller_role {
+      is_active = true
+    }
+  }
+
+  tags = {
+    version = "1.0.0"
+  }
+}
+
+resource "aws_lightsail_container_service_deployment_version" "deployment" {
+  container {
+    container_name = "nodejs2-application"
+
+    image = "${var.REPOSITORY_URI}:latest"
+
+    ports = {
+      # Consistent with the port exposed by the Dockerfile and app.py
+      5000 = "HTTP"
+    }
+  }
+
+  public_endpoint {
+    container_name = "nodejs2-application"
+    # Consistent with the port exposed by the Dockerfile and app.py
+    container_port = 5000
+
+    health_check {
+      healthy_threshold   = 2
+      unhealthy_threshold = 2
+      timeout_seconds     = 2
+      interval_seconds    = 5
+      path                = "/"
+      success_codes       = "200-499"
+    }
+  }
+
+  service_name = aws_lightsail_container_service.nodejs_application.name
 }
