@@ -5,16 +5,6 @@ terraform {
       version = "5.28.0"
     }
   }
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "terraform-up-and-running-state"
-    key            = "global/s3/terraform.tfstate"
-    region         = var.REGION
-
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "terraform-up-and-running-locks"
-    encrypt        = true
-  }
 }
 
 provider "aws" {
@@ -30,7 +20,7 @@ variable "REPOSITORY_URI" {
 }
 
 resource "aws_lightsail_container_service" "nodejs_application" {
-  name = "nodejs-app"
+  name = "nodejs2-app"
   power = "nano"
   scale = 1
 
@@ -47,7 +37,7 @@ resource "aws_lightsail_container_service" "nodejs_application" {
 
 resource "aws_lightsail_container_service_deployment_version" "deployment" {
   container {
-    container_name = "nodejs-application"
+    container_name = "nodejs2-application"
 
     image = "${var.REPOSITORY_URI}:latest"
 
@@ -58,7 +48,7 @@ resource "aws_lightsail_container_service_deployment_version" "deployment" {
   }
 
   public_endpoint {
-    container_name = "nodejs-application"
+    container_name = "nodejs2-application"
     # Consistent with the port exposed by the Dockerfile and app.py
     container_port = 5000
 
@@ -73,51 +63,4 @@ resource "aws_lightsail_container_service_deployment_version" "deployment" {
   }
 
   service_name = aws_lightsail_container_service.nodejs_application.name
-}
-
-//------------------
-
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-up-and-running-state"
-
-  # Prevent accidental deletion of this S3 bucket
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "aws_s3_bucket_versioning" "enabled" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
-  bucket = aws_s3_bucket.terraform_state.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "public_access" {
-  bucket                  = aws_s3_bucket.terraform_state.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-up-and-running-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
 }
