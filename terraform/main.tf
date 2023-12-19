@@ -12,7 +12,6 @@ provider "aws" {
   assume_role {
     role_arn = "arn:aws:iam::934170639195:role/github.to.aws"
     session_name = "github_action_session"
-    web_identity_token_file = "/tmp/web_identity_token_file"
   }
 }
 
