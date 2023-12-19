@@ -18,81 +18,78 @@ jobs:
         node-version: [14.x]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: |
-        npm install
-        npx webpack
+      - name: Build
+        run: |
+          npm install
+          npx webpack
 
-    - name: Run tests
-      run: |
-        npx jest
+      - name: Run tests
+        run: |
+          npx jest
 
-    - name: Setup AWS ECR Details
-      uses: aws-actions/configure-aws-credentials@v3
-      with:
-        role-to-assume: arn:aws:iam::934170639195:role/github.to.aws
-        aws-region: ${{ secrets.AWS_REGION }}
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::934170639195:role/github.to.aws
+          role-duration-seconds: 5000
+          role-session-name: GitHubActions
+          role-skip-session-tagging: true
+          mask-aws-account-id: false
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Show roles
-      run: |
-        aws sts get-caller-identity
+      - name: Show roles
+        run: |
+          aws sts get-caller-identity
 
-    - name: List ECR Repositories
-      run: |
-        aws ecr describe-repositories
+      - name: List ECR Repositories
+        run: |
+          aws ecr describe-repositories
 
-    - name: Build and push the tagged docker image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.REPOSITORY_NAME }}
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Build and push the tagged docker image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.REPOSITORY_NAME }}
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Setup Terraform
-      env:
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.0.1
-        terraform_wrapper: false
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
 
-    - name: Terraform Format
-      id: fmt
-      run: terraform fmt -check
-      working-directory: terraform
-      continue-on-error: true
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+        working-directory: terraform
+        continue-on-error: true
 
-    - name: Terraform Init
-      id: init
-      run: terraform init
-      working-directory: terraform
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: terraform
 
-    - name: Terraform Plan
-      id: plan
-      run: |
-        terraform plan -no-color -input=false -refresh=true -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
-      working-directory: terraform
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -no-color -input=false -refresh=true -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
+        working-directory: terraform
 
-    - name: Terraform Apply
-      env:
-        REPOSITORY_URI: ${{ secrets.REPOSITORY_URI }}
-      run: |
-        terraform apply -input=false -auto-approve -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
-      working-directory: terraform
-
-#fag
+      - name: Terraform Apply
+        run: |
+          terraform apply -input=false -auto-approve -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
+        working-directory: terraform
