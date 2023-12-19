@@ -6,65 +6,25 @@ terraform {
     }
   }
 }
-
 provider "aws" {
-  region = var.REGION
-  assume_role {
-    role_arn = "arn:aws:iam::934170639195:role/github.to.aws"
-    session_name = "github_action_session"
+  region = var.region
+}
+
+resource "aws_ecr_repository" "repository" {
+  name                 = var.repository_name
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
   }
 }
 
-variable "REGION" {
-  type = string
+variable "region" {
+  description = "AWS region"
+  default     = "us-west-2"
 }
 
-variable "REPOSITORY_URI" {
-  type = string
-}
-
-resource "aws_lightsail_container_service" "nodejs_application" {
-  name = "nodejs2-app"
-  power = "nano"
-  scale = 1
-
-  private_registry_access {
-    ecr_image_puller_role {
-      is_active = true
-    }
-  }
-
-  tags = {
-    version = "1.0.0"
-  }
-}
-
-resource "aws_lightsail_container_service_deployment_version" "deployment" {
-  container {
-    container_name = "nodejs2-application"
-
-    image = "${var.REPOSITORY_URI}:latest"
-
-    ports = {
-      # Consistent with the port exposed by the Dockerfile and app.py
-      5000 = "HTTP"
-    }
-  }
-
-  public_endpoint {
-    container_name = "nodejs2-application"
-    # Consistent with the port exposed by the Dockerfile and app.py
-    container_port = 5000
-
-    health_check {
-      healthy_threshold   = 2
-      unhealthy_threshold = 2
-      timeout_seconds     = 2
-      interval_seconds    = 5
-      path                = "/"
-      success_codes       = "200-499"
-    }
-  }
-
-  service_name = aws_lightsail_container_service.nodejs_application.name
+variable "repository_name" {
+  description = "Name of the ECR repository"
+  default     = "my-ecr-repo"
 }

@@ -8,6 +8,7 @@ on:
 
 permissions:
   id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
 
 jobs:
   build:
@@ -40,8 +41,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: arn:aws:iam::934170639195:role/github.to.aws
           role-session-name: GitHubActions
-          role-skip-session-tagging: true
-          mask-aws-account-id: false
+#          role-skip-session-tagging: true
+#          mask-aws-account-id: false
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -85,7 +86,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan -no-color -input=false -refresh=true -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
+          terraform plan -no-color -refresh=true -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}" -var="REGION=${{ secrets.AWS_REGION }}"
         working-directory: terraform
 
       - name: Terraform Apply
