@@ -68,3 +68,5 @@ resource "aws_lightsail_container_service_deployment_version" "deployment" {
 
   service_name = aws_lightsail_container_service.nodejs_application.name
 }
+
+#gqg
