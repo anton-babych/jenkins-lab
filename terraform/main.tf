@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "5.28.0"
     }
   }
@@ -9,6 +9,9 @@ terraform {
 
 provider "aws" {
   region = var.REGION
+  assume_role {
+    role_arn = "arn:aws:iam::934170639195:role/github.to.aws"
+  }
 }
 
 variable "REGION" {
