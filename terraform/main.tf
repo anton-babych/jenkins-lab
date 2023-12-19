@@ -10,21 +10,21 @@ provider "aws" {
   region = var.region
 }
 
-resource "aws_ecr_repository" "repository" {
-  name                 = var.repository_name
-  image_tag_mutability = "MUTABLE"
+resource "aws_s3_bucket" "bucket" {
+  bucket = var.bucket_name
+  acl    = "private"
 
-  image_scanning_configuration {
-    scan_on_push = true
+  versioning {
+    enabled = true
   }
 }
 
 variable "region" {
   description = "AWS region"
-  default     = "us-west-2"
+  default     = "eu-north-1"
 }
 
-variable "repository_name" {
-  description = "Name of the ECR repository"
-  default     = "my-ecr-repo"
+variable "bucket_name" {
+  description = "Name of the S3 bucket"
+  default     = "my-s3-bucket"
 }
