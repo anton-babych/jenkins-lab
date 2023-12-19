@@ -28,3 +28,7 @@ variable "bucket_name" {
   description = "Name of the S3 bucket"
   default     = "my-s3-bucket"
 }
+
+variable "REPOSITORY_URI" {
+  type = string
+}
