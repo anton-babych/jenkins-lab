@@ -7,7 +7,7 @@ terraform {
   }
 }
 provider "aws" {
-  region = var.region
+  region = var.REGION
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-variable "region" {
+variable "REGION" {
   description = "AWS region"
   default     = "eu-north-1"
 }
